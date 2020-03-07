@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>School of Electronic Engineering and Computer  Science</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <div align="center">
+  <img src="https://www.qmul.ac.uk/blizard/media/blizard/images/logos/QMUL_White.png"  style=" width:400px; height:120px; border:none;"/>
+<img src="https://i2.wp.com/www.innovationtoronto.com/wp-content/uploads/2019/05/BUPT_logo_800px111.jpg?fit=800%2C240&ssl=1"  style=" width:400px; height:120px; border:none;"/>
+<h1 id="EBU6305---interactive-media-design-and-productionbrlab-3">EBU6305 - INTERACTIVE MEDIA DESIGN AND PRODUCTION  </br>Lab 4</h1>
+</div>
+
+<h3 id="introduction">Introduction</h3>
+<p>This lab focuses on adding interactive animation to HTML5 canvas using <a href="https://konvajs.org/">Konva.js</a>, a HTML5 2d canvas library.</p>
+ <p><b>** The original content was prepared by María Santamaría, and restructured to fit EBU6305 course. **</b></p>
+<h3 id="how-does-it-work">How does it work?</h3>
+<p>&quot;Every thing starts from <code>Konva.Stage</code> that contains several user’s layers (<code>Konva.Layer</code>).&quot; <a href="https://konvajs.org/docs/overview.html">[1]</a></p>
+<p>Each layer can contain shapes, groups of shapes, or groups of other groups.</p>
+<h3 id="first-step">First step</h3>
+<ol>
+  <li>Open <code>A.html</code> in Firefox and in a text editor</li>
+<li>Note how a stage and a layer are created.</li>
+</ol>
+<h3 id="add-mouse-events-to-the-whole-stage">Add mouse events to the whole stage</h3>
+<ol>
+<li>Add a <code>mouseout</code> event to the stage</li>
+</ol>
+<pre><code><div>stage.on('mouseout', function() {
+  writeMessage('Mouseout canvas');
+});
+</div></code></pre>
+<ol start="2">
+<li>Add a <code>mousemove</code> event to the stage and display the mouse position</li>
+</ol>
+<pre><code><div>stage.on('mousemove', function() {
+  var mousePos = stage.getPointerPosition();
+  var x = mousePos.x - 190;
+  var y = mousePos.y - 40;
+  writeMessage('x: ' + x + ', y: ' + y);
+});
+</div></code></pre>
+<h3 id="associate-events-with-different-shapes-on-a-canvas">Associate events with different shapes on a canvas</h3>
+<p>This exercise was taken from <a href="https://konvajs.org/docs/events/Binding_Events.html">HTML5 Canvas Shape Events</a></p>
+<ol>
+<li>
+<p>Open <code>B.html</code> in Firefox and in a text editor</p>
+</li>
+<li>
+<p>Draw a triangle</p>
+</li>
+</ol>
+<pre><code><div>var triangle = new Konva.RegularPolygon({
+  x: 80,
+  y: 120,
+  sides: 3,
+  radius: 80,
+  fill: '#00D2FF',
+  stroke: 'black',
+  strokeWidth: 4
+});
+</div></code></pre>
+<ol start="3">
+<li>Add a <code>mouseout</code> event to the triangle</li>
+</ol>
+<pre><code><div>triangle.on('mouseout', function() {
+  writeMessage('Mouseout triangle');
+});
+</div></code></pre>
+<ol start="4">
+<li>Add a <code>mousemove</code> event to the triangle and display the mouse position</li>
+</ol>
+<pre><code><div>triangle.on('mousemove', function() {
+  var mousePos = stage.getPointerPosition();
+  var x = mousePos.x - 190;
+  var y = mousePos.y - 40;
+  writeMessage('x: ' + x + ', y: ' + y);
+});
+</div></code></pre>
+<ol start="5">
+<li>Add the triangle to the layer</li>
+</ol>
+<pre><code><div>layer.add(triangle);
+</div></code></pre>
+<ol start="6">
+<li>Draw a circle</li>
+</ol>
+<pre><code><div>var circle = new Konva.Circle({
+  x: 230,
+  y: 100,
+  radius: 60,
+  fill: 'red',
+  stroke: 'black',
+  strokeWidth: 4
+});
+</div></code></pre>
+<ol start="7">
+<li>Add the following events to the circle</li>
+</ol>
+<pre><code><div>circle.on('mouseover', function() {
+  writeMessage('Mouseover circle');
+});
+circle.on('mouseout', function() {
+  writeMessage('Mouseout circle');
+});
+circle.on('mousedown', function() {
+  writeMessage('Mousedown circle');
+});
+circle.on('mouseup', function() {
+  writeMessage('Mouseup circle');
+});
+</div></code></pre>
+<ol start="8">
+<li>Add the circle to the layer</li>
+</ol>
+<pre><code><div>layer.add(circle);
+</div></code></pre>
+<h3 id="drag-and-drop-an-image">Drag and drop an image</h3>
+<p>This exercise was taken from <a href="https://konvajs.org/docs/drag_and_drop/Drag_an_Image.html">HTML5 Canvas Drag and Drop an Image</a></p>
+<ol>
+<li>
+<p>Open <code>C.html</code> in Firefox and in a text editor</p>
+</li>
+<li>
+<p>Load the image</p>
+</li>
+</ol>
+<pre><code><div>var imageObj = new Image();
+imageObj.onload = function() {
+  drawImage(this);
+};
+imageObj.src = 'cat.jpg';
+</div></code></pre>
+<ol start="3">
+<li>Add the KonvaImage in the centre of the stage and make it draggable</li>
+</ol>
+<pre><code><div>var catImg = new Konva.Image({
+  image: imageObj,
+  x: stage.width() / 2 - 150 / 2,
+  y: stage.height() / 2 - 150 / 2,
+  width: 150,
+  height: 150,
+  draggable: true
+});
+</div></code></pre>
+<ol start="4">
+<li>Change the cursor style</li>
+</ol>
+<pre><code><div>catImg.on('mouseover', function() {
+  document.body.style.cursor = 'pointer';
+});
+catImg.on('mouseout', function() {
+  document.body.style.cursor = 'default';
+});
+</div></code></pre>
+<ol start="5">
+<li>Add the KonvaImage to the layer</li>
+</ol>
+<pre><code><div>layer.add(catImg);
+</div></code></pre>
+<ol start="6">
+<li>Add the layer to the stage</li>
+</ol>
+<pre><code><div>stage.add(layer);
+</div></code></pre>
+<p>Note: the image used is <a href="https://flic.kr/p/ahuXf8">cat</a> by <a href="https://www.flickr.com/photos/mextech/">Artis Logins</a></p>
+<h3 id="free-drawing">Free drawing</h3>
+<p>This exercise was taken from <a href="https://konvajs.org/docs/sandbox/Free_Drawing.html">Free Drawing Konva Demo</a></p>
+<ol>
+<li>
+<p>Open <code>D.html</code> in Firefox and in a text editor</p>
+</li>
+<li>
+<p>Read the code and understand it</p>
+</li>
+<li>
+<p>Try to add options to change the brush colour</p>
+</li>
+<li>
+<p>Try to add an option to clear the whole canvas</p>
+</li>
+</ol>
+
+    </body>
+    </html>

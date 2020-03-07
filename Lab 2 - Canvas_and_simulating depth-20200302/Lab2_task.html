@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>School of Electronic Engineering and Computer  Science</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <div align="center">
+  <img src="https://www.qmul.ac.uk/blizard/media/blizard/images/logos/QMUL_White.png"  style=" width:400px; height:120px; border:none;"/>
+<img src="https://i2.wp.com/www.innovationtoronto.com/wp-content/uploads/2019/05/BUPT_logo_800px111.jpg?fit=800%2C240&ssl=1"  style=" width:400px; height:120px; border:none;"/>
+<h1 id="EBU6305---interactive-media-design-and-productionbrlab-3">EBU6305 - INTERACTIVE MEDIA DESIGN AND PRODUCTION  </br>Lab 2</h1>
+</div>
+
+<h3 id="introduction">Introduction</h3>
+<p>This lab is about styling a canvas and simulating depth.</p>
+<p><b>** The original content was prepared by María Santamaría, and restructured to fit EBU6305 course. **</b></p>
+      
+<h3 id="setup">Setup</h3>
+<ol>
+<li>Open <code>index.html</code> file in Firefox.</li>
+  <li>Open <code>index.html</code>, <code>layout.css</code> and <code>sky.js</code> files in a text editor (i.e. codepen, gedit, sublime, atom, etc.).</li>
+<li>Explore the developer tools and console (Ctrl-Shift-K) in Firefox.</li>
+</ol>
+<h3 id="adapt-canvas-to-windows-size">Adapt canvas to windows size</h3>
+<ol>
+<li>
+<p>Notice there is a space between the beginning of the web page and where the canvas is displayed.</p>
+</li>
+<li>
+<p>Eliminate this space by adding the following rule to <code>layout.css</code> file:</p>
+</li>
+</ol>
+<pre><code><div>html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+  overflow: hidden; /* Disable scrollbars */
+  display: block; /* No floating content on sides */
+}
+</div></code></pre>
+<ol start="3">
+<li>Make the canvas fit 100% of the page by adding the following rule to <code>layout.css</code> file:</li>
+</ol>
+<pre><code><div>canvas {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+</div></code></pre>
+<h3 id="scale-canvas-when-window-is-resized">Scale canvas when window is resized</h3>
+<p>Here we will use the <code>window</code> property <code>devicePixelRatio</code> that &quot;returns the ratio of the resolution in physical pixels to the resolution in CSS pixels for the current display device. This value could also be interpreted as the ratio of pixel sizes: the size of one CSS pixel to the size of one physical pixel. In simpler terms, this tells the browser how many of the screen's actual pixels should be used to draw a single CSS pixel.&quot;<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio">[1]</a></p>
+<ol>
+<li>Add the following line at beginning <code>sky.js</code>:</li>
+</ol>
+<pre><code><div>var scale = window.devicePixelRatio;
+</div></code></pre>
+<ol start="2">
+<li>
+<p>Go to the definition of <code>redraw</code> function.</p>
+</li>
+<li>
+<p>Add the following lines to get the CSS width and height of the canvas and scale it using the variable defined in the previous step.</p>
+</li>
+</ol>
+<pre><code><div>let style_width = +getComputedStyle(bg_canvas).getPropertyValue(&quot;width&quot;).slice(0, -2) * scale;
+let style_height = +getComputedStyle(bg_canvas).getPropertyValue(&quot;height&quot;).slice(0, -2) * scale;
+</div></code></pre>
+<ol start="3">
+<li>Change the calls to <code>drawBackground</code> and <code>drawForeground</code> so they read:</li>
+</ol>
+<pre><code><div>drawBackground(style_width, style_height);
+drawForeground(style_width, style_height);
+</div></code></pre>
+<ol start="4">
+<li>Go to the definition of <code>drawBackground</code> function and set the size of the canvas at the beginning:</li>
+</ol>
+<pre><code><div>bg_canvas.setAttribute('width', width);
+bg_canvas.setAttribute('height', height);
+</div></code></pre>
+<ol start="5">
+<li>Go to the definition of <code>drawForeground</code> function and set the size of the canvas at the beginning:</li>
+</ol>
+<pre><code><div>fg_canvas.setAttribute('width', width);
+fg_canvas.setAttribute('height', height);
+</div></code></pre>
+<h3 id="add-more-objects">Add more objects</h3>
+<ol>
+<li>
+<p>Go to the definition of <code>drawForeground</code> function.</p>
+</li>
+<li>
+<p>Add an albatross image:</p>
+</li>
+</ol>
+<pre><code><div>albatross_img = new Image();
+albatross_img.src = '37586.png';
+albatross_img.onload = function(){
+  fg_ctx.drawImage(albatross_img, 200, 200);
+}
+</div></code></pre>
+<ol start="3">
+<li>Draw a couple of clouds by invoking the function <code>drawCloud(startX, startY, alpha)</code> as follows:</li>
+</ol>
+<pre><code><div>let numClouds = 10;
+for (let i = 1; i &lt; numClouds; i++)
+{
+  drawCloud(100 * i , 50 * i + 120 , i / numClouds);
+}
+</div></code></pre>
+<ol start="4">
+<li>
+<p>Notice the <code>alpha</code> argument sets the transparency of the cloud. Also, since the albatross was drawn before, it gives the impression to be behind the clouds.</p>
+</li>
+<li>
+<p>Try to create your own cloud. Take a look at the following links:</p>
+</li>
+</ol>
+<ul>
+<li><a href="https://www.w3schools.com/tags/canvas_beziercurveto.asp">HTML canvas bezierCurveTo() Method</a></li>
+<li><a href="http://www.victoriakirst.com/beziertool/">HTML5 &lt;canvas&gt; bezierCurveTo command generator</a></li>
+</ul>
+<h3 id="drawing-clouds-from-xml-file">Drawing clouds from XML file</h3>
+<ol>
+<li>
+<p>Open the <code>cloud.xml</code> in a text editor and check the structure of a cloud.</p>
+</li>
+<li>
+<p>Go to <code>drawForeground</code> function in <code>sky.js</code>.</p>
+</li>
+<li>
+<p>Add at the end the call:</p>
+</li>
+</ol>
+<pre><code><div>drawCloudFromXML('cloud.xml');
+</div></code></pre>
+<ol start="4">
+<li>
+<p>Go to the definition of <code>drawCloudFromXML</code> function.</p>
+</li>
+<li>
+<p>Check how the XML file is being parsed and how the different node values are being used to create a new cloud using bezier curves.</p>
+</li>
+<li>
+<p>Modify the shape, colour or starting point of the cloud in <code>cloud.xml</code>.</p>
+</li>
+</ol>
+
+    </body>
+    </html>

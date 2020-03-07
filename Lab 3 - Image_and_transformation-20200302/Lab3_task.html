@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>School of Electronic Engineering and Computer  Science</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+        
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        
+        
+    </head>
+    <body class="vscode-light">
+        <div align="center">
+  <img src="https://www.qmul.ac.uk/blizard/media/blizard/images/logos/QMUL_White.png"  style=" width:400px; height:120px; border:none;"/>
+<img src="https://i2.wp.com/www.innovationtoronto.com/wp-content/uploads/2019/05/BUPT_logo_800px111.jpg?fit=800%2C240&ssl=1"  style=" width:400px; height:120px; border:none;"/>
+<h1 id="EBU6305---interactive-media-design-and-productionbrlab-3">EBU6305 - INTERACTIVE MEDIA DESIGN AND PRODUCTION </br>Lab 3</h1>
+</div>
+
+<h3 id="introduction">Introduction</h3>
+<p>The purpose of this lab session is get experience working with HTML5 Canvas images and to learn transformation.</p>
+
+<p><b>** The original content was prepared by María Santamaría, and restructured to fit EBU6305 course. **</b></p>
+<h3 id="setup">Setup</h3>
+<ol>
+<li>Open <code>index.html</code> file in Firefox.</li>
+<li>Open <code>index.html</code> files in a text editor (i.e. codepen, gedit, sublime, atom, etc.).</li>
+<li>Explore the developer tools and console (Ctrl-Shift-K) in Firefox.</li>
+</ol>
+<h3 id="draw-an-image">Draw an image</h3>
+<ol>
+<li>Download a <a href="https://live.staticflickr.com/7423/16339195416_3d3619c4dd_c_d.jpg">red panda image</a> and save it in this folder with the name <code>red_panda.jpg</code></li>
+<li>Draw the image into the canvas as follows:</li>
+</ol>
+<pre><code><div>var imageObj = new Image();
+imageObj.onload=function() {
+  var destX = canvas.width / 2 - this.width / 2;
+  var destY = canvas.height / 2 - this.height / 2;
+  ctx.drawImage(this, destX, destY);
+  console.log(destX, destY);
+  console.log(this.width/2, this.height/2);
+};
+imageObj.src=&quot;./red_panda.jpg&quot;
+</div></code></pre>
+<p>Note the image is centered within the canvas. This is achieved by &quot;aligning&quot; the centres of both the canvas and the image (see variables <code>destX</code> and <code>destY</code>).</p>
+<h3 id="crop-an-image">Crop an image</h3>
+<ol>
+<li>Comment the line:</li>
+</ol>
+<pre><code><div>ctx.drawImage(this, destX, destY);
+</div></code></pre>
+<ol start="2">
+<li>Check the syntax for image clipping. <a href="https://www.w3schools.com/tags/canvas_drawimage.asp">HTML canvas drawImage() Method</a>:</li>
+</ol>
+<pre><code><div>context.drawImage(img, sx, sy, swidth, sheight, x, y, width, height);
+</div></code></pre>
+<ul>
+<li><code>img</code> is the image, canvas or video to use</li>
+<li><code>sx</code> and <code>sy</code> are the coordinates where start the clipping</li>
+<li><code>swidth</code> and <code>sheight</code> are the width and height of the clipped image</li>
+<li><code>x</code> and <code>y</code> are the coordinates where to place the image on the canvas</li>
+<li><code>width</code> and <code>height</code> are the width and height of the image to use</li>
+</ul>
+<ol start="3">
+<li>Change the body of <code>imageObj.onload=function()</code> accordingly in order to crop the red panda image. Example:</li>
+</ol>
+<pre><code><div>clipX = 50;
+clipY = 50;
+clipWidth = 150;
+clipHeight= 150;
+ctx.drawImage(this, clipX, clipY, clipWidth, clipHeight, destX, destY, clipWidth, clipHeight);
+</div></code></pre>
+<ol start="4">
+<li>Consider varying the positions of the above to create different sets of cropped image</li>
+</ol>
+<h3 id="save-the-canvas-data-as-an-image">Save the canvas data as an image</h3>
+<ol>
+<li>Add an image tag in the body of your webpage.</li>
+</ol>
+<pre><code><div>&lt;img id=&quot;canvasImg&quot;/&gt;
+</div></code></pre>
+<ol start="2">
+<li>Grab the content of the canvas as (after the image is drawn):</li>
+</ol>
+<pre><code><div>var canvasContent = canvas.toDataURL();
+</div></code></pre>
+<ol start="3">
+<li>Assign the canvas content to the image element:</li>
+</ol>
+<pre><code><div>document.getElementById(&quot;canvasImg&quot;).src = canvasContent;
+</div></code></pre>
+<h3 id="transform-objects-on-canvas">Transform objects on canvas</h3>
+<ol>
+<li>
+<p>Draw the whole red panda image by commenting the clipping and uncommenting the original draw</p>
+</li>
+<li>
+<p>Check the syntax for canvas transformations. <a href="https://www.w3schools.com/tags/canvas_transform.asp">HTML canvas transform() Method</a>:</p>
+</li>
+</ol>
+<pre><code><div>a 	c 	e
+b 	d 	f
+0 	0 	1
+</div></code></pre>
+<ul>
+<li><code>a</code> and <code>d</code> represent horizontal and vertical scaling, respectively</li>
+<li><code>b</code> and <code>c</code> represent horizontal and vertical skewing, respectively</li>
+<li><code>e</code> and <code>f</code> represent horizontal and vertical moving, respectively</li>
+</ul>
+<p><font color='red'><strong>Note:</strong></font> The <code>transform()</code> method behaves relatively to other transformations made by <code>rotate()</code>, <code>scale()</code>, <code>translate()</code>, or <code>transform()</code>. Check the syntax of these methods too.</p>
+<ol start="3">
+<li>Rescale the image on the canvas to half its size using <code>transform()</code> method:</li>
+</ol>
+<pre><code><div>ctx.transform(0.5, 0, 0, 0.5, 0, 0);
+</div></code></pre>
+<ol start="4">
+<li>Now rescale the image on the canvas using the <code>scale()</code> method:</li>
+</ol>
+<pre><code><div>ctx.scale(2, 2);
+</div></code></pre>
+<ol start="5">
+<li>Rotate the image on the canvas using the <code>rotate()</code> method:</li>
+</ol>
+<pre><code><div>ctx.rotate(20 * Math.PI / 180);
+</div></code></pre>
+<ol start="6">
+<li>Before the end of the lab session, try to familiarise yourself by configuring the <code>rotate()</code>, <code>scale()</code>, <code>translate()</code>, or <code>transform()</code> methods. Also try to familiarise yourself with cropping an image too.</li>
+</ol>
+</div></code></pre>
+    </body>
+</html>
